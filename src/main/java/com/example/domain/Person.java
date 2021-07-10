@@ -29,6 +29,10 @@ public class Person {
         assignedJobs.add(job);
     }
 
+    public void sayName() {
+        System.out.println(this.getName());
+    }
+
     private boolean assertJobIsAssignable(Job job) {
         return (job.getRequiredMinAge() > age);
     }

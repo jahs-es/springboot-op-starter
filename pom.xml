@@ -67,7 +67,13 @@
             <artifactId>momentjs</artifactId>
             <scope>runtime</scope>
         </dependency>
-<!--        <dependency>-->
+        <dependency>
+            <groupId>com.github.stefanbirkner</groupId>
+            <artifactId>system-lambda</artifactId>
+            <version>1.0.0</version>
+            <scope>test</scope>
+        </dependency>
+        <!--        <dependency>-->
 <!--            <groupId>org.optaplanner</groupId>-->
 <!--            <artifactId>optaplanner-test</artifactId>-->
 <!--            <version>8.0.0.Final</version>-->
