@@ -16,6 +16,9 @@ public class CloudBalance {
     @ValueRangeProvider(id = "computerRange")
     private List<CloudComputer> computerList;
 
+    @ProblemFactCollectionProperty
+    private List<CloudType> cloudTypeList;
+
     @PlanningEntityCollectionProperty
     private List<CloudProcess> processList;
 
@@ -26,9 +29,10 @@ public class CloudBalance {
     private SolverStatus solverStatus;
 
 
-    public CloudBalance(List<CloudComputer> computerList, List<CloudProcess> processList) {
+    public CloudBalance(List<CloudComputer> computerList, List<CloudProcess> processList, List<CloudType> cloudTypeList) {
         this.computerList = computerList;
         this.processList = processList;
+        this.cloudTypeList = cloudTypeList;
     }
 
     public CloudBalance() {
@@ -48,6 +52,14 @@ public class CloudBalance {
 
     public void setProcessList(List<CloudProcess> processList) {
         this.processList = processList;
+    }
+
+    public List<CloudType> getCloudTypeList() {
+        return cloudTypeList;
+    }
+
+    public void setCloudTypeList(List<CloudType> cloudTypeList) {
+        this.cloudTypeList = cloudTypeList;
     }
 
     public HardSoftScore getScore() {

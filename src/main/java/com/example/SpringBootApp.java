@@ -2,8 +2,10 @@ package com.example;
 
 import com.example.domain.CloudComputer;
 import com.example.domain.CloudProcess;
+import com.example.domain.CloudType;
 import com.example.persistence.CloudComputerRepository;
 import com.example.persistence.CloudProcessRepository;
+import com.example.persistence.CloudTypeRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,21 +20,30 @@ public class SpringBootApp {
     @Bean
     public CommandLineRunner demoData(
             CloudComputerRepository cloudComputerRepository,
+            CloudTypeRepository cloudTypeRepository,
             CloudProcessRepository cloudProcessRepository) {
         return (args) -> {
-            CloudComputer computer1 = new CloudComputer(1, 1, 1, 2);
-            CloudComputer computer2 = new CloudComputer(2, 2, 2, 4);
+            CloudComputer computer1 = new CloudComputer(10, 10, 10, 2);
+            CloudComputer computer2 = new CloudComputer(5, 5, 5, 4);
 
             cloudComputerRepository.save(computer1);
             cloudComputerRepository.save(computer2);
 
-            CloudProcess process1 = new CloudProcess(1, 1, 1);
-            CloudProcess process2 = new CloudProcess(1, 1, 1);
-            CloudProcess process3 = new CloudProcess(1, 1, 1);
+            CloudType type1 = new CloudType("T1");
+            CloudType type2 = new CloudType("T2");
+
+            cloudTypeRepository.save(type1);
+            cloudTypeRepository.save(type2);
+
+            CloudProcess process1 = new CloudProcess(2, 1, 1,type2);
+            CloudProcess process2 = new CloudProcess(2, 1, 1,type1);
+            CloudProcess process3 = new CloudProcess(2, 1, 1,type2);
+            CloudProcess process4 = new CloudProcess(2, 1, 1,type1);
 
             cloudProcessRepository.save(process1);
             cloudProcessRepository.save(process2);
             cloudProcessRepository.save(process3);
+            cloudProcessRepository.save(process4);
         };
     }
 }
