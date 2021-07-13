@@ -16,6 +16,8 @@ public class CloudBalanceRepository {
     private CloudComputerRepository cloudComputerRepository;
     @Autowired
     private CloudProcessRepository cloudProcessRepository;
+    @Autowired
+    private CloudTypeRepository cloudTypeRepository;
 
     public CloudBalance findById(Long id) {
         if (!SINGLETON_ID.equals(id)) {
@@ -23,7 +25,8 @@ public class CloudBalanceRepository {
         }
         return new CloudBalance(
                 cloudComputerRepository.findAll(),
-                cloudProcessRepository.findAll());
+                cloudProcessRepository.findAll(),
+                cloudTypeRepository.findAll());
     }
 
     public void save(CloudBalance cloudBalance) {

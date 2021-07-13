@@ -18,6 +18,9 @@ public class CloudProcess {
     @GeneratedValue
     private Long id;
 
+    @ManyToOne
+    private CloudType type;
+
     private int requiredCpuPower;
     private int requiredMemory;
     private int requiredNetworkBandwidth;
@@ -26,18 +29,20 @@ public class CloudProcess {
     @ManyToOne
     private CloudComputer computer;
 
-    public CloudProcess(Long id, int requiredCpuPower, int requiredMemory, int requiredNetworkBandwidth, CloudComputer computer) {
+    public CloudProcess(Long id, int requiredCpuPower, int requiredMemory, int requiredNetworkBandwidth, CloudComputer computer, CloudType type) {
         this.id = id;
         this.requiredCpuPower = requiredCpuPower;
         this.requiredMemory = requiredMemory;
         this.requiredNetworkBandwidth = requiredNetworkBandwidth;
         this.computer = computer;
+        this.type = type;
     }
 
-    public CloudProcess(int requiredCpuPower, int requiredMemory, int requiredNetworkBandwidth) {
+    public CloudProcess(int requiredCpuPower, int requiredMemory, int requiredNetworkBandwidth, CloudType type) {
         this.requiredCpuPower = requiredCpuPower;
         this.requiredMemory = requiredMemory;
         this.requiredNetworkBandwidth = requiredNetworkBandwidth;
+        this.type = type;
     }
 
     public CloudProcess() {
@@ -87,5 +92,13 @@ public class CloudProcess {
 
     public void setComputer(CloudComputer computer) {
         this.computer = computer;
+    }
+
+    public CloudType getType() {
+        return type;
+    }
+
+    public void setType(CloudType type) {
+        this.type = type;
     }
 }

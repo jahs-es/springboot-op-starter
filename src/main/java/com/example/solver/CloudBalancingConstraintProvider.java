@@ -1,18 +1,17 @@
 package com.example.solver;
 
-import static org.optaplanner.core.api.score.stream.ConstraintCollectors.sum;
-import static org.optaplanner.core.api.score.stream.Joiners.equal;
-
-import java.util.function.Function;
-
 import com.example.domain.CloudComputer;
 import com.example.domain.CloudProcess;
+import com.example.domain.CloudType;
 import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
 import org.optaplanner.core.api.score.stream.Constraint;
 import org.optaplanner.core.api.score.stream.ConstraintFactory;
 import org.optaplanner.core.api.score.stream.ConstraintProvider;
 
 import java.util.function.Function;
+
+import static org.optaplanner.core.api.score.stream.ConstraintCollectors.sum;
+import static org.optaplanner.core.api.score.stream.Joiners.equal;
 
 public class CloudBalancingConstraintProvider implements ConstraintProvider {
 
@@ -22,7 +21,9 @@ public class CloudBalancingConstraintProvider implements ConstraintProvider {
                 requiredCpuPowerTotal(constraintFactory),
                 requiredMemoryTotal(constraintFactory),
                 requiredNetworkBandwidthTotal(constraintFactory),
-                computerCost(constraintFactory)
+                computerCost(constraintFactory),
+                typeDiversification(constraintFactory),
+                atLeastOneInComputer(constraintFactory)
         };
     }
 
@@ -69,4 +70,20 @@ public class CloudBalancingConstraintProvider implements ConstraintProvider {
                         CloudComputer::getCost);
     }
 
+    protected Constraint typeDiversification(ConstraintFactory factory) {
+        return factory.fromUniquePair(CloudProcess.class,
+                equal(CloudProcess::getComputer))
+                .filter((process1, process2) -> !process1.getType().equals(process2.getType()))
+                .reward("type diversification",HardSoftScore.ONE_SOFT);
+    }
+
+    protected Constraint atLeastOneInComputer(ConstraintFactory factory) {
+        return factory.from(CloudComputer.class)
+                .join(CloudType.class)
+                .ifNotExists(CloudProcess.class,
+                        equal((computer, type) -> computer, CloudProcess::getComputer),
+                        equal((computer, type) -> type, CloudProcess::getType)
+                )
+                .penalize("atLeastOne", HardSoftScore.ONE_HARD);
+    }
 }
