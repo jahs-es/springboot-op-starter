@@ -98,54 +98,60 @@ public class CloudBalancingConstraintProviderTest {
     }
 
     @Test
-    public void typeDiversification() {
+    public void typeBalancedRewarded() {
         CloudType type1 = new CloudType("T1");
         CloudType type2 = new CloudType("T2");
 
         CloudComputer computer1 = new CloudComputer( 0L,1, 1, 1, 2);
         CloudComputer computer2 = new CloudComputer( 1L,2, 2, 2, 4);
 
-        CloudProcess process1 = new CloudProcess( 1L,1, 1, 1, computer1,type1);
-        CloudProcess process2 = new CloudProcess( 2L,1, 1, 1, computer1,type2);
+        CloudProcess process0 = new CloudProcess( 0L,1, 1, 1, computer1,type1);
+        CloudProcess process1 = new CloudProcess( 1L,1, 1, 1, computer1,type2);
+        CloudProcess process2 = new CloudProcess( 2L,1, 1, 1, computer2,type1);
+        CloudProcess process3 = new CloudProcess( 3L,1, 1, 1, computer2,type2);
 
-        constraintVerifier.verifyThat(CloudBalancingConstraintProvider::typeDiversification)
-                .given(computer1, computer2,process1,process2)
-                .rewardsWith(1);
+        constraintVerifier.verifyThat(CloudBalancingConstraintProvider::typeBalanced)
+                .given(computer1, computer2, process0, process1, process2, process3)
+                .rewardsWith(2);
     }
 
     @Test
-    public void atLeastOneTypeInComputerPenalized() {
+    public void typeBalancedNotRewarded() {
         CloudType type1 = new CloudType("T1");
         CloudType type2 = new CloudType("T2");
+        CloudType type3 = new CloudType("T3");
 
         CloudComputer computer1 = new CloudComputer( 0L,1, 1, 1, 2);
         CloudComputer computer2 = new CloudComputer( 1L,2, 2, 2, 4);
 
+        CloudProcess process0 = new CloudProcess( 0L,1, 1, 1, computer1,type1);
         CloudProcess process1 = new CloudProcess( 1L,1, 1, 1, computer1,type1);
-        CloudProcess process2 = new CloudProcess( 2L,1, 1, 1, computer1,type1);
-        CloudProcess process3 = new CloudProcess( 3L,1, 1, 1, computer1,type2);
-        CloudProcess process4 = new CloudProcess( 4L,1, 1, 1, computer2,type2);
+        CloudProcess process2 = new CloudProcess( 2L,1, 1, 1, computer2,type2);
+        CloudProcess process3 = new CloudProcess( 3L,1, 1, 1, computer2,type2);
+        CloudProcess process4 = new CloudProcess( 4L,1, 1, 1, computer2,type3);
 
-        constraintVerifier.verifyThat(CloudBalancingConstraintProvider::atLeastOneInComputer)
-                .given(computer1, computer2,process1,process2,process3,process4, type1, type2)
-                .penalizesBy(1);
+        constraintVerifier.verifyThat(CloudBalancingConstraintProvider::typeBalanced)
+                .given(computer1, computer2, process0, process1, process2, process3, process4)
+                .rewardsWith(2);
     }
 
     @Test
-    public void atLeastOneTypeInComputerUnpenalized() {
+    public void allTypesInEveryComputerPenalized() {
         CloudType type1 = new CloudType("T1");
         CloudType type2 = new CloudType("T2");
+        CloudType type3 = new CloudType("T3");
 
         CloudComputer computer1 = new CloudComputer( 0L,1, 1, 1, 2);
         CloudComputer computer2 = new CloudComputer( 1L,2, 2, 2, 4);
 
-        CloudProcess process1 = new CloudProcess( 1L,1, 1, 1, computer1,type1);
-        CloudProcess process2 = new CloudProcess( 2L,1, 1, 1, computer1,type2);
-        CloudProcess process3 = new CloudProcess( 3L,1, 1, 1, computer2,type1);
-        CloudProcess process4 = new CloudProcess( 4L,1, 1, 1, computer2,type2);
+        CloudProcess process0 = new CloudProcess( 0L,1, 1, 1, computer1,type1);
+        CloudProcess process1 = new CloudProcess( 1L,1, 1, 1, computer2,type2);
+        CloudProcess process2 = new CloudProcess( 2L,1, 1, 1, computer2,type1);
+        CloudProcess process3 = new CloudProcess( 3L,1, 1, 1, computer2,type2);
+        CloudProcess process4 = new CloudProcess( 4L,1, 1, 1, computer2,type3);
 
-        constraintVerifier.verifyThat(CloudBalancingConstraintProvider::atLeastOneInComputer)
-                .given(computer1, computer2,process1,process2,process3,process4, type1, type2)
-                .penalizesBy(0);
+        constraintVerifier.verifyThat(CloudBalancingConstraintProvider::allTypesInEveryComputer)
+                .given(computer1, computer2, process0, process1, process2, process3, process4,type1, type2, type3)
+                .penalizesBy(2);
     }
 }
